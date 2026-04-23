@@ -13,6 +13,7 @@ const AdminPanel = () => {
     const [newProduct, setNewProduct] = useState({ brand: '', modelName: '', type: 'Cover', stock: 0 });
     const { logout } = useContext(AuthContext);
     const navigate = useNavigate();
+    const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? window.location.origin : 'http://localhost:5000');
 
     const handleDeleteAccount = async () => {
         if (window.confirm('Are you sure you want to delete your ADMIN account? This will remove all your access.')) {
@@ -162,7 +163,7 @@ const AdminPanel = () => {
                                 <tr key={p._id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
                                     <td style={{ padding: '12px' }}>
                                         {p.image ? (
-                                            <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${p.image}`} alt="Product" style={{ width: '40px', height: '40px', borderRadius: '5px', objectFit: 'cover' }} />
+                                            <img src={`${API_BASE}${p.image}`} alt="Product" style={{ width: '40px', height: '40px', borderRadius: '5px', objectFit: 'cover' }} />
                                         ) : (
                                             <div style={{ width: '40px', height: '40px', borderRadius: '5px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem' }}>No Img</div>
                                         )}
@@ -193,7 +194,7 @@ const AdminPanel = () => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                                         {req.product.image && (
-                                            <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${req.product.image}`} alt="Prod" style={{ width: '45px', height: '45px', borderRadius: '8px', objectFit: 'cover' }} />
+                                            <img src={`${API_BASE}${req.product.image}`} alt="Prod" style={{ width: '45px', height: '45px', borderRadius: '8px', objectFit: 'cover' }} />
                                         )}
                                         <div>
                                             <h4 style={{ color: 'var(--primary)' }}>{req.user.name}</h4>

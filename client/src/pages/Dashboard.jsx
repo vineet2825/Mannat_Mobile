@@ -12,6 +12,7 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
+    const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? window.location.origin : 'http://localhost:5000');
 
     const handleDeleteAccount = async () => {
         if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
@@ -121,7 +122,7 @@ const Dashboard = () => {
                                 <div key={product._id} className="glass-card" style={{ padding: '20px' }}>
                                     {product.image && (
                                         <div style={{ width: '100%', height: '150px', borderRadius: '10px', overflow: 'hidden', marginBottom: '15px' }}>
-                                            <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${product.image}`} alt={product.modelName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <img src={`${API_BASE}${product.image}`} alt={product.modelName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                         </div>
                                     )}
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
