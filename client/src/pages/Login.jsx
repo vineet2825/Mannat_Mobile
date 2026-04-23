@@ -20,6 +20,9 @@ const Login = () => {
         } catch (err) {
             if (err.response?.data?.otp) {
                 console.log('%c🔑 DEV OTP:', 'color: #3b82f6; font-size: 20px; font-weight: bold;', err.response.data.otp);
+                // Redirect unverified users to verification page
+                localStorage.setItem('pendingEmail', email);
+                navigate('/verify');
             }
             setError(err.response?.data?.message || 'Login failed');
         }
