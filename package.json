@@ -5,8 +5,8 @@
     "start": "node server/index.js",
     "server": "cd server && npm start",
     "client": "cd client && npm run dev",
-    "build": "npm run install-all && cd client && npm run build",
-    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "build": "npm install && npm install --prefix server && npm install --prefix client && cd client && npm run build",
+    "install-all": "npm install && npm install --prefix server && npm install --prefix client",
     "postinstall": "npm run install-all"
   }
 }
