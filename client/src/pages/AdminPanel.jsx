@@ -54,9 +54,7 @@ const AdminPanel = () => {
         }
 
         try {
-            await API.post('/products', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            await API.post('/products', formData);
             setShowAddModal(false);
             setNewProduct({ brand: '', modelName: '', type: 'Cover', stock: 0, image: null });
             fetchData();
@@ -337,7 +335,7 @@ const AdminPanel = () => {
                                 <label style={{ color: 'white', display: 'block', marginBottom: '10px', fontSize: '1.1rem' }}>Type</label>
                                 <select value={newProduct.type} onChange={e => setNewProduct({...newProduct, type: e.target.value})} style={{ background: 'rgba(255,255,255,0.05)', color: 'white', padding: '15px', fontSize: '1rem', width: '100%' }}>
                                     <option value="Cover">Cover</option>
-                                    <option value="Tempered">Tempered Glass</option>
+                                    <option value="Tempered">Tempered</option>
                                 </select>
                             </div>
                             <div className="input-group" style={{ marginBottom: '25px' }}>
