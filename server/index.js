@@ -47,3 +47,5 @@ process.on('unhandledRejection', (err, promise) => {
     console.log(`Error: ${err.message}`);
     // Keep the server running instead of closing
 });
+
+module.exports = app;
