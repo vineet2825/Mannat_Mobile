@@ -200,6 +200,7 @@ const AdminPanel = () => {
                                         <p style={{ fontSize: '0.9rem' }}>{req.product.brand} {req.product.modelName} ({req.product.type})</p>
                                         <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{req.user.email}</p>
                                     </div>
+                                </div>
                                     <div style={{ display: 'flex', gap: '10px' }}>
                                         {req.status === 'Pending' ? (
                                             <>
