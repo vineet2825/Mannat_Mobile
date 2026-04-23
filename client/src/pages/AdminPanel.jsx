@@ -60,7 +60,7 @@ const AdminPanel = () => {
             setNewProduct({ brand: '', modelName: '', type: 'Cover', stock: 0, image: null });
             fetchData();
         } catch (err) {
-            alert('Failed to add product');
+            alert(err.response?.data?.message || 'Failed to add product');
         }
     };
 

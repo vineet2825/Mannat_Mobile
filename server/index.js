@@ -2,11 +2,20 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const fs = require('fs');
+const path = require('path');
 
 dotenv.config();
 
 // Connect to Database
 connectDB();
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+    console.log('Created uploads directory');
+}
 
 const app = express();
 
@@ -46,8 +55,13 @@ if (!process.env.VERCEL) {
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
-    console.log(`Error: ${err.message}`);
-    // Keep the server running instead of closing
+    console.error(`Unhandled Rejection: ${err.message}`);
+    if (err.stack) console.error(err.stack);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error(`Uncaught Exception: ${err.message}`);
+    if (err.stack) console.error(err.stack);
 });
 
 module.exports = app;

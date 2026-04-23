@@ -18,15 +18,24 @@ exports.addProduct = async (req, res) => {
     const image = req.file ? `/uploads/${req.file.filename}` : '';
 
     try {
+        if (!brand || !modelName || !type) {
+            return res.status(400).json({ message: 'Please fill all required fields: brand, modelName, and type' });
+        }
+
         const product = await Product.create({
             brand,
             modelName,
             type,
-            stock,
+            stock: stock || 0,
             image
         });
         res.status(201).json(product);
     } catch (error) {
+        console.error('Add Product Error:', error.message);
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(val => val.message);
+            return res.status(400).json({ message: messages.join(', ') });
+        }
         res.status(400).json({ message: error.message });
     }
 };
