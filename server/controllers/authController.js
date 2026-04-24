@@ -5,7 +5,14 @@ const sendEmail = require('../utils/sendEmail');
 
 // Generate JWT
 const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    if (!process.env.JWT_SECRET) {
+        console.warn('⚠️ WARNING: JWT_SECRET is not defined in .env. Using a temporary secret for development.');
+    }
+    return jwt.sign(
+        { id: id.toString() }, 
+        process.env.JWT_SECRET || 'dev_secret_key_123_change_this_in_production', 
+        { expiresIn: '30d' }
+    );
 };
 
 // @desc    Register user & Send OTP
@@ -14,6 +21,10 @@ exports.register = async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Please provide all required fields: name, email, and password.' });
+        }
+
         if (mongoose.connection.readyState !== 1) {
             return res.status(503).json({ message: 'Database connecting... please try again in a few seconds.' });
         }
@@ -59,9 +70,19 @@ exports.register = async (req, res) => {
             });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('\n' + '!'.repeat(40));
+        console.error('❌ REGISTRATION ERROR');
+        console.error('Message:', error.message);
+        if (error.stack) console.error('Stack:', error.stack.split('\n')[1]); // Log first line of stack
+        console.error('!'.repeat(40) + '\n');
+        
+        res.status(500).json({ 
+            message: 'Server Error during Registration',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined 
+        });
     }
 };
+
 
 // @desc    Verify OTP
 // @route   POST /api/auth/verify
@@ -102,6 +123,10 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Please provide both email and password.' });
+        }
+
         if (mongoose.connection.readyState !== 1) {
             return res.status(503).json({ message: 'Database connecting... please try again in a few seconds.' });
         }
@@ -135,8 +160,30 @@ exports.login = async (req, res) => {
             res.status(401).json({ message: 'Invalid email or password' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('\n' + '!'.repeat(40));
+        console.error('❌ LOGIN ERROR');
+        console.error('Message:', error.message);
+        if (error.stack) console.error('Stack:', error.stack.split('\n')[1]);
+        console.error('!'.repeat(40) + '\n');
+        
+        res.status(500).json({ 
+            message: 'Server Error during Login',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
+};
+
+
+// @desc    Check DB connection status
+// @route   GET /api/auth/db-status
+exports.getDbStatus = async (req, res) => {
+    const status = mongoose.connection.readyState;
+    const states = ['Disconnected', 'Connected', 'Connecting', 'Disconnecting'];
+    res.json({
+        readyState: status,
+        status: states[status] || 'Unknown',
+        connected: status === 1
+    });
 };
 
 // @desc    Delete user account

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { register, verifyOtp, login, deleteUser, getUsers, toggleBlockUser, adminDeleteUser } = require('../controllers/authController');
+const { register, verifyOtp, login, deleteUser, getUsers, toggleBlockUser, adminDeleteUser, getDbStatus } = require('../controllers/authController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
+router.get('/db-status', getDbStatus);
 router.post('/register', register);
 router.post('/verify', verifyOtp);
 router.post('/login', login);
